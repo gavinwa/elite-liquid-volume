@@ -1,7 +1,6 @@
 #pragma once
-#include "colorfulDlg.h"
 
-class CResultDlg : public CColorfulDlg
+class CResultDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(CResultDlg)
 

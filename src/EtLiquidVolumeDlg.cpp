@@ -14,14 +14,21 @@ using namespace std;
 
 double q(double v, double c, double m, double d, double rou)
 {
-	return (v * c * v) / (22.4 * d * rou) * 0.000000001;
+	return (v * c * m) / (22.4 * d * rou) * 0.1;
 }
 
 // CEtLiquidVolumeDlg 对话框
 CEtLiquidVolumeDlg::CEtLiquidVolumeDlg(CWnd* pParent /*=NULL*/)
-	: CColorfulDlg(CEtLiquidVolumeDlg::IDD, pParent)
+	: CDialogEx(CEtLiquidVolumeDlg::IDD, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+
+	m_editConcentration = 0.0;
+	m_editVelocity = 0.0;
+	m_editPurity = 0.0;
+	m_editDensity = 0.0;
+	m_editMolWeight = 0.0;
+	m_editBoilingPoint = 0.0;
 }
 
 CEtLiquidVolumeDlg::~CEtLiquidVolumeDlg()
@@ -32,20 +39,20 @@ CEtLiquidVolumeDlg::~CEtLiquidVolumeDlg()
 void CEtLiquidVolumeDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_COMBO1, m_cbxLiqName);
-	DDX_Control(pDX, IDC_EDIT6, m_editConcentration);
-	DDX_Control(pDX, IDC_EDIT7, m_editVelocity);
-	DDX_Control(pDX, IDC_EDIT_PURITY, m_editPurity);
-	DDX_Control(pDX, IDC_EDIT3, m_editDensity);
-	DDX_Control(pDX, IDC_EDIT4, m_editMolWeight);
-	DDX_Control(pDX, IDC_EDIT5, m_editBoilingPoint);
+	DDX_Control(pDX, IDC_COMBO_LIQNAME, m_cbxLiqName);
+	DDX_Text(pDX, IDC_EDIT_CONCENTRATION, m_editConcentration);
+	DDX_Text(pDX, IDC_EDIT_VELOCITY, m_editVelocity);
+	DDX_Text(pDX, IDC_EDIT_PURITY, m_editPurity);
+	DDX_Text(pDX, IDC_EDIT_DENSITY, m_editDensity);
+	DDX_Text(pDX, IDC_EDIT_MOLWEIGHT, m_editMolWeight);
+	DDX_Text(pDX, IDC_EDIT_BOILINGPOINT, m_editBoilingPoint);
 }
 
 BEGIN_MESSAGE_MAP(CEtLiquidVolumeDlg, CDialogEx)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_WM_CTLCOLOR()
-	ON_CBN_SELCHANGE(IDC_COMBO1, &CEtLiquidVolumeDlg::OnCbnLiqNameSelectionChanged)
+	//ON_WM_CTLCOLOR()
+	ON_CBN_SELCHANGE(IDC_COMBO_LIQNAME, &CEtLiquidVolumeDlg::OnCbnLiqNameSelectionChanged)
 	ON_EN_KILLFOCUS(IDC_EDIT_PURITY, &CEtLiquidVolumeDlg::OnKillfocusEditPurity)
 END_MESSAGE_MAP()
 
@@ -54,7 +61,7 @@ END_MESSAGE_MAP()
 
 BOOL CEtLiquidVolumeDlg::OnInitDialog()
 {
-	CColorfulDlg::OnInitDialog();
+	CDialogEx::OnInitDialog();
 
 	// 设置此对话框的图标。当应用程序主窗口不是对话框时，框架将自动执行此操作
 	SetIcon(m_hIcon, TRUE);			// 设置大图标
@@ -73,9 +80,10 @@ BOOL CEtLiquidVolumeDlg::OnInitDialog()
 		}
 	}
 
-	m_editConcentration.SetWindowTextW(_T("1"));
-	m_editVelocity.SetWindowTextW(_T("1000"));
-	m_editPurity.SetWindowTextW(_T("100"));
+	m_editConcentration = 1;
+	m_editVelocity = 1000;
+	m_editPurity = 100;
+	UpdateData(FALSE);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -120,14 +128,9 @@ void CEtLiquidVolumeDlg::OnOK()
 	if (!isPurityValid())
 		return;
 
-	// calculate
-	double v = getEditCtrlNumber(m_editVelocity);
-	double c = 	getEditCtrlNumber(m_editConcentration);
-	double m = getEditCtrlNumber(m_editMolWeight);
-	double d = getEditCtrlNumber(m_editDensity);
-	double b = getEditCtrlNumber(m_editBoilingPoint);
+	UpdateData(TRUE);
 
-	double result = q(v, c, m, d, b);
+	double result = q(m_editVelocity, m_editConcentration, m_editMolWeight, m_editPurity, m_editDensity);
 
 	CResultDlg resultDlg;
 	resultDlg.SetResult(result);
@@ -149,13 +152,15 @@ void CEtLiquidVolumeDlg::OnCbnLiqNameSelectionChanged()
 	CString liqName;
 	m_cbxLiqName.GetLBText(idx, liqName);
 	Liquid liq = m_liqDB->getLiquidByName(liqName);
-	CString str;
-	str.Format(_T("%.0f"), liq.m_boilingPoint);
-	m_editBoilingPoint.SetWindowTextW(str);
-	str.Format(_T("%.0f"), liq.m_density);
-	m_editDensity.SetWindowTextW(str);
-	str.Format(_T("%.0f"), liq.m_molecularWeight);
-	m_editMolWeight.SetWindowTextW(str);
+
+	m_editBoilingPoint = liq.m_boilingPoint;
+	m_editDensity = liq.m_density;
+	m_editMolWeight = liq.m_molecularWeight;
+	m_editVelocity = liq.m_velocity;
+	m_editConcentration = liq.m_concentration;
+	m_editPurity = liq.m_purity;
+
+	UpdateData(FALSE);
 }
 
 void CEtLiquidVolumeDlg::OnKillfocusEditPurity()
@@ -164,24 +169,19 @@ void CEtLiquidVolumeDlg::OnKillfocusEditPurity()
 		return;
 }
 
-int CEtLiquidVolumeDlg::getEditCtrlNumber(const CEdit & editCtrl)
-{
-	CString txt;
-	editCtrl.GetWindowTextW(txt);
-	return _ttoi(txt);
-}
-
 bool CEtLiquidVolumeDlg::isPurityValid()
 {
-	CString purityTxt;
-	m_editPurity.GetWindowTextW(purityTxt);
-	int purity = _ttoi(purityTxt);
-	if (purity < 1 || purity > 100)
+	UpdateData(TRUE);
+
+	if (m_editPurity < 1 || m_editPurity > 100)
 	{
-		m_editPurity.SetWindowTextW(_T("100"));
-		m_editPurity.SetFocus();
-		m_editPurity.SetSel(0, m_editPurity.GetWindowTextLengthW());
+		m_editPurity = 100.000;
+		UpdateData(FALSE);
+		CEdit * pur = (CEdit *)GetDlgItem(IDC_EDIT_PURITY);
+		pur->SetFocus();
+		pur->SetSel(0, pur->GetWindowTextLengthW());
 		return false;
 	}
 	return true;
 }
+

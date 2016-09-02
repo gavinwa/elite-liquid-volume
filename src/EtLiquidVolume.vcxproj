@@ -100,7 +100,6 @@
     <None Include="res\logo.bmp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="colorfulDlg.h" />
     <ClInclude Include="EtLiquidVolume.h" />
     <ClInclude Include="EtLiquidVolumeDlg.h" />
     <ClInclude Include="excel9.h" />
@@ -112,7 +111,6 @@
     <ClInclude Include="welcomeDlg.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="colorfulDlg.cpp" />
     <ClCompile Include="EtLiquidVolume.cpp" />
     <ClCompile Include="EtLiquidVolumeDlg.cpp" />
     <ClCompile Include="excel9.cpp" />

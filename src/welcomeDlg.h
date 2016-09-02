@@ -1,12 +1,10 @@
 #pragma once
 
-#include "colorfulDlg.h"
-
 // CWelcomeDlg dialog
 
 #define TIMER_CLOSE_WELCOME 1
 
-class CWelcomeDlg : public CColorfulDlg
+class CWelcomeDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(CWelcomeDlg)
 

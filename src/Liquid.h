@@ -10,8 +10,11 @@ typedef struct _Liquid
 public:
 	CString m_name;
 	double m_density;
+	double m_purity;
 	double m_molecularWeight;
 	double m_boilingPoint;
+	double m_velocity;
+	double m_concentration;
 } Liquid;
 
 class LiquidDB

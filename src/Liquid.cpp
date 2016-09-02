@@ -35,10 +35,10 @@ bool LiquidDB::Load()
 	COleVariant covOptional((long)DISP_E_PARAMNOTFOUND, VT_ERROR);    
 
 	//初始化COM的动态连接库
-	if(!AfxOleInit())  
+	if(!AfxOleInit())
 	{
 		return false;
-	}   
+	}
 
 	// 启动Excel
 	if(!app.CreateDispatch(_T("Excel.Application"))) 
@@ -50,8 +50,6 @@ bool LiquidDB::Load()
 	app.SetUserControl(FALSE);      //允许其它用户控制Excel
 
 	books.AttachDispatch(app.GetWorkbooks());
-	/*lpDisp = books.Open(strfile, covOptional, covOptional, covOptional, covOptional, covOptional,
-	covOptional, covOptional, covOptional, covOptional, covOptional, covOptional, covOptional );*/
 	lpDisp = books.Open(strfile, covFalse, covTrue, covOptional, covOptional, covOptional, covTrue, covOptional,
 		covOptional, covFalse, covFalse, covFalse, covFalse);
 	book.AttachDispatch(lpDisp);
@@ -67,9 +65,12 @@ bool LiquidDB::Load()
 		oneLi.m_name = getStrValue(sheet, range, row, 1);
 		oneLi.m_boilingPoint = getDoubleValue(sheet, range, row, 2);
 		oneLi.m_density = getDoubleValue(sheet, range, row, 3);
+		oneLi.m_purity = getDoubleValue(sheet, range, row, 4);
 		oneLi.m_molecularWeight = getDoubleValue(sheet, range, row, 5);
-
-		if (!oneLi.m_name.IsEmpty()) {
+		oneLi.m_velocity = getDoubleValue(sheet, range, row, 6);
+		oneLi.m_concentration = getDoubleValue(sheet, range, row, 7);
+		if (!oneLi.m_name.IsEmpty())
+		{
 			m_liqList[oneLi.m_name] = oneLi;
 		}
 		++row;

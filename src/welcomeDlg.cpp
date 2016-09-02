@@ -4,14 +4,13 @@
 #include "stdafx.h"
 #include "EtLiquidVolume.h"
 #include "welcomeDlg.h"
-#include "colorfulDlg.h"
 
 // CWelcomeDlg dialog
 
-IMPLEMENT_DYNAMIC(CWelcomeDlg, CColorfulDlg)
+IMPLEMENT_DYNAMIC(CWelcomeDlg, CDialogEx)
 
 CWelcomeDlg::CWelcomeDlg(CWnd* pParent /*=NULL*/)
-	: CColorfulDlg(CWelcomeDlg::IDD, pParent)
+	: CDialogEx(CWelcomeDlg::IDD, pParent)
 {
 }
 
@@ -34,7 +33,7 @@ END_MESSAGE_MAP()
 // CWelcomeDlg message handlers
 BOOL CWelcomeDlg::OnInitDialog()
 {
-	CColorfulDlg::OnInitDialog();
+	CDialogEx::OnInitDialog();
 	return TRUE;
 }
 

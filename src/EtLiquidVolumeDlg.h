@@ -1,11 +1,10 @@
 #pragma once
-#include "colorfulDlg.h"
 #include "afxwin.h"
 
 class LiquidDB;
 
 // CEtLiquidVolumeDlg 对话框
-class CEtLiquidVolumeDlg : public CColorfulDlg
+class CEtLiquidVolumeDlg : public CDialogEx
 {
 // 构造
 public:
@@ -33,17 +32,16 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
-
-	int getEditCtrlNumber(const CEdit &);
-
 	bool isPurityValid();
+
 	CComboBox m_cbxLiqName;
-	CEdit m_editConcentration;
-	CEdit m_editVelocity;
-	CEdit m_editPurity;
-	CEdit m_editDensity;
-	CEdit m_editMolWeight;
-	CEdit m_editBoilingPoint;
+	double m_editConcentration;
+	double m_editVelocity;
+	double m_editPurity;
+	double m_editDensity;
+	double m_editMolWeight;
+	double m_editBoilingPoint;
 
 	LiquidDB *m_liqDB;
+public:
 };

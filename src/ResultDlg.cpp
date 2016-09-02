@@ -6,13 +6,12 @@
 #include "ResultDlg.h"
 #include "afxdialogex.h"
 
-
 // CResultDlg dialog
 
 IMPLEMENT_DYNAMIC(CResultDlg, CDialogEx)
 
 CResultDlg::CResultDlg(CWnd* pParent /*=NULL*/)
-	: CColorfulDlg(CResultDlg::IDD, pParent)
+	: CDialogEx(CResultDlg::IDD, pParent)
 	, m_result(0)
 {
 }
@@ -27,7 +26,6 @@ void CResultDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(CResultDlg, CDialogEx)
-	ON_WM_CTLCOLOR()
 END_MESSAGE_MAP()
 
 
@@ -39,10 +37,10 @@ void CResultDlg::SetResult(double result)
 
 BOOL CResultDlg::OnInitDialog()
 {
-	CColorfulDlg::OnInitDialog();
+	CDialogEx::OnInitDialog();
 
 	CString resultStr;
-	resultStr.Format(_T("%f"), m_result);
+	resultStr.Format(_T("%.3f"), m_result);
 	GetDlgItem(IDC_EDIT_RESULT)->SetWindowText(resultStr);
 	GetDlgItem(IDC_EDIT_RESULT)->SetFocus();
 	return TRUE;
