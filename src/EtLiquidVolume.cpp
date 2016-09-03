@@ -8,6 +8,14 @@
 #include "welcomeDlg.h"
 #include "Liquid.h"
 
+
+#include <comdef.h>//初始化一下com口
+#include "GdiPlus.h"
+using namespace Gdiplus;
+#pragma comment(lib,"gdiplus.lib")
+
+
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
@@ -58,6 +66,9 @@ BOOL CEtLiquidVolumeApp::InitInstance()
 
 	SetRegistryKey(_T("应用程序向导生成的本地应用程序"));
 
+	GdiplusStartupInput gdiplusStartupInput;
+	GdiplusStartup(&m_gdiplusToken, &gdiplusStartupInput, NULL);
+
 	CWelcomeDlg welcomeDlg;
 	welcomeDlg.DoModal();
 
@@ -86,3 +97,8 @@ BOOL CEtLiquidVolumeApp::InitInstance()
 	return FALSE;
 }
 
+int CEtLiquidVolumeApp::ExitInstance()
+{
+	GdiplusShutdown(m_gdiplusToken);
+	return CWinApp::ExitInstance();
+}

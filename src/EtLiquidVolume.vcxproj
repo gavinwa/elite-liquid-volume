@@ -55,6 +55,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>gdiplus.lib</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -98,6 +99,7 @@
     <None Include="res\EtLiquidVolume.ico" />
     <None Include="res\EtLiquidVolume.rc2" />
     <None Include="res\logo.bmp" />
+    <None Include="res\LOGO.png" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EtLiquidVolume.h" />

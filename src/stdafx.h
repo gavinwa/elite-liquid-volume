@@ -55,3 +55,8 @@
 #endif
 
 
+
+#include <comdef.h>//初始化一下com口
+#include "GdiPlus.h"
+using namespace Gdiplus;
+#pragma comment(lib, "gdiplus.lib")

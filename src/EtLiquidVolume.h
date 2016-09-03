@@ -23,10 +23,13 @@ public:
 // ÷ÿ–¥
 public:
 	virtual BOOL InitInstance();
+	int ExitInstance();
 
 //  µœ÷
 
 	DECLARE_MESSAGE_MAP()
+
+	ULONG_PTR m_gdiplusToken;
 };
 
 extern CEtLiquidVolumeApp theApp;
