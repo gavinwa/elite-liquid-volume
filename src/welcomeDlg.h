@@ -2,8 +2,6 @@
 
 // CWelcomeDlg dialog
 
-#define TIMER_CLOSE_WELCOME 1
-
 class CWelcomeDlg : public CDialogEx
 {
 	DECLARE_DYNAMIC(CWelcomeDlg)
@@ -17,12 +15,12 @@ public:
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
-	virtual BOOL OnInitDialog();
+	afx_msg BOOL OnInitDialog();
 
 	DECLARE_MESSAGE_MAP()
-public:
-	afx_msg void OnShowWindow(BOOL bShow, UINT nStatus);
-	afx_msg void OnTimer(UINT_PTR nIDEvent);
+
+private:
 	afx_msg void OnPaint();
+
+	CImage m_logoImage;
 };

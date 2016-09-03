@@ -47,13 +47,14 @@ bool LoadImageFromResource(CImage *pImage, UINT nResID, LPCTSTR lpTyp)
 
 IMPLEMENT_DYNAMIC(CWelcomeDlg, CDialogEx)
 
-	CWelcomeDlg::CWelcomeDlg(CWnd* pParent /*=NULL*/)
+CWelcomeDlg::CWelcomeDlg(CWnd* pParent /*=NULL*/)
 	: CDialogEx(CWelcomeDlg::IDD, pParent)
 {
 }
 
 CWelcomeDlg::~CWelcomeDlg()
 {
+	m_logoImage.Destroy();
 }
 
 void CWelcomeDlg::DoDataExchange(CDataExchange* pDX)
@@ -63,54 +64,42 @@ void CWelcomeDlg::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CWelcomeDlg, CDialogEx)
-	ON_WM_SHOWWINDOW()
-	ON_WM_TIMER()
 	ON_WM_PAINT()
 END_MESSAGE_MAP()
 
-// CWelcomeDlg message handlers
 BOOL CWelcomeDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-	return TRUE;
-}
 
-void CWelcomeDlg::OnShowWindow(BOOL bShow, UINT nStatus)
-{
-	CDialogEx::OnShowWindow(bShow, nStatus);
-	SetTimer(TIMER_CLOSE_WELCOME, 2000, NULL);
-}
+	LoadImageFromResource(&m_logoImage, IDB_PNG_LOGO, _T("PNG"));
+	ASSERT(!m_logoImage.IsNull());
 
-void CWelcomeDlg::OnTimer(UINT_PTR nIDEvent)
-{
-	KillTimer(TIMER_CLOSE_WELCOME);
-	CWelcomeDlg::OnOK();
-	CDialogEx::OnTimer(nIDEvent);
-}
-
-
-void CWelcomeDlg::OnPaint()
-{
-	CImage image;
-	LoadImageFromResource(&image, IDB_PNG_LOGO, _T("PNG"));
-	ASSERT(!image.IsNull());
-
-	if (image.GetBPP() == 32) //确认该图像包含Alpha通道
+	if (m_logoImage.GetBPP() == 32) //确认该图像包含Alpha通道
 	{
-		for (int i=0; i < image.GetWidth(); ++i)
+		for (int i=0; i < m_logoImage.GetWidth(); ++i)
 		{
-			for (int j=0; j < image.GetHeight(); ++j)
+			for (int j=0; j < m_logoImage.GetHeight(); ++j)
 			{
-				byte *pByte = (byte *)image.GetPixelAddress(i, j);
+				byte *pByte = (byte *)m_logoImage.GetPixelAddress(i, j);
 				pByte[0] = pByte[0] * pByte[3] / 255;
 				pByte[1] = pByte[1] * pByte[3] / 255;
 				pByte[2] = pByte[2] * pByte[3] / 255;
 			}
 		}
 	}
+	return TRUE;
+}
 
+void CWelcomeDlg::OnPaint()
+{
 	CDC *pDC = new CClientDC(GetDlgItem(IDC_STATIC_LOGO));
-	image.Draw(pDC->m_hDC, 0, 0, image.GetWidth()/5, image.GetHeight()/5);
-	image.Destroy();
+	m_logoImage.Draw(pDC->m_hDC, 0, 0, m_logoImage.GetWidth()/5, m_logoImage.GetHeight()/5);
 	delete pDC;
+
+	static int start = GetTickCount();
+	int current = GetTickCount();
+	if (current - start > 2000)
+	{
+		CWelcomeDlg::OnOK();
+	}
 }
