@@ -1,3 +1,7 @@
+*.aps
+*.sdf
+*.suo
+*.user
 # Compiled Object files
 *.slo
 *.lo
