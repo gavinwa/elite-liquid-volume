@@ -1,7 +1,12 @@
+#Visual Studio temp file.
 *.aps
 *.sdf
 *.suo
 *.user
+Debug/
+Release/
+ipch/
+
 # Compiled Object files
 *.slo
 *.lo
